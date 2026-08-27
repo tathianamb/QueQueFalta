@@ -467,7 +467,6 @@ function Home({
                 Pendentes ({sugestoesPendentes.length})
               </p>
               {sugestoesPendentes.map((s) => {
-                const jaAprovou = s.aprovadores?.includes(usuario.uid);
                 const editando = sugestaoEditando?.id === s.id;
                 return (
                   <div
@@ -631,11 +630,6 @@ function Home({
                             <p style={{ ...TIPOGRAFIA.subcategoria, color: "var(--text-soft)", marginTop: "2px" }}>
                               {s.categoria}{s.subcategoria ? ` · ${s.subcategoria}` : ""}
                             </p>
-                            {s.status === "aguardando_segunda_aprovacao" && (
-                              <p style={{ ...TIPOGRAFIA.subcategoria, color: COR.neutro, marginTop: "2px" }}>
-                                {s.aprovadores?.length}/2 aprovações
-                              </p>
-                            )}
                           </div>
                           <div style={{ display: "flex", gap: "6px", flexShrink: 0 }}>
                             <button

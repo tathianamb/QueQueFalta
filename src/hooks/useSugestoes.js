@@ -13,37 +13,23 @@ export function useSugestoes(usuario) {
     return () => unsub()
   }, [])
 
-  const pendentes = sugestoes.filter(s =>
-    s.status === 'pendente' || s.status === 'aguardando_segunda_aprovacao'
-  )
+  const pendentes = sugestoes.filter(s => s.status === 'pendente')
 
   const aprovar = async (sugestao) => {
-    const jaAprovou = sugestao.aprovadores?.includes(usuario.uid)
-    if (jaAprovou) return
-
-    const novosAprovadores = [...(sugestao.aprovadores || []), usuario.uid]
-
-    if (novosAprovadores.length >= 2) {
-      await addDoc(collection(db, 'catalogo'), {
-        nome: sugestao.nome,
-        categoria: sugestao.categoria,
-        subcategoria: sugestao.subcategoria || '',
-        grupoSubstituicao: sugestao.grupoSubstituicao || [],
-        historico: [],
-        receitas: [],
-        criadoEm: serverTimestamp(),
-      })
-      await updateDoc(doc(db, 'sugestoes', sugestao.id), {
-        status: 'aprovado',
-        aprovadores: novosAprovadores,
-        aprovadoEm: serverTimestamp(),
-      })
-    } else {
-      await updateDoc(doc(db, 'sugestoes', sugestao.id), {
-        status: 'aguardando_segunda_aprovacao',
-        aprovadores: novosAprovadores,
-      })
-    }
+    await addDoc(collection(db, 'catalogo'), {
+      nome: sugestao.nome,
+      categoria: sugestao.categoria,
+      subcategoria: sugestao.subcategoria || '',
+      grupoSubstituicao: sugestao.grupoSubstituicao || [],
+      historico: [],
+      receitas: [],
+      criadoEm: serverTimestamp(),
+    })
+    await updateDoc(doc(db, 'sugestoes', sugestao.id), {
+      status: 'aprovado',
+      aprovadores: [usuario.uid],
+      aprovadoEm: serverTimestamp(),
+    })
   }
 
   const rejeitar = async (sugestao) => {

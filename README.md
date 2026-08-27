@@ -62,7 +62,7 @@ catalogo (coleção global de produtos)
     ├── nome
     ├── categoria
     ├── subcategoria
-    ├── tags []
+    ├── grupoSubstituicao []
     ├── historico []        # preços registrados
     │   ├── mercado
     │   ├── preco
@@ -90,9 +90,9 @@ usuarios
 
 sugestoes                  # novos produtos propostos
 └── {sugestaoId}
-    ├── nome / categoria / subcategoria / tags
-    ├── status             # pendente | aguardando_segunda_aprovacao | aprovado | rejeitado
-    └── aprovadores []     # uids que já aprovaram (precisa de 2)
+    ├── nome / categoria / subcategoria / grupoSubstituicao
+    ├── status             # pendente | aprovado | rejeitado
+    └── aprovadores []     # uid do admin que aprovou
 ```
 
 ### Mercados cadastrados (fixos)
@@ -272,8 +272,8 @@ O workflow `.github/workflows/deploy.yml` faz build e publica em GitHub Pages a 
 ### Offline
 O Service Worker (gerado pelo `vite-plugin-pwa`, `registerType: 'autoUpdate'`) cacheia os assets, e o Firestore mantém os dados localmente. O SDK enfileira as escritas feitas offline e sincroniza ao reconectar.
 
-### Sugestões de produtos (aprovação dupla)
-Quando um usuário sugere um produto, ele entra como `pendente`. Após a aprovação de um admin, passa a `aguardando_segunda_aprovacao`; com a aprovação de um segundo admin, o produto é criado no catálogo e a sugestão fica `aprovado`.
+### Sugestões de produtos
+Quando um usuário sugere um produto, ele entra como `pendente`. Com a aprovação de um admin, o produto é criado no catálogo e a sugestão fica `aprovado`.
 
 ---
 
